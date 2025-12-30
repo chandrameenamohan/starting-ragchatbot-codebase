@@ -43,7 +43,7 @@ class QueryRequest(BaseModel):
 class QueryResponse(BaseModel):
     """Response model for course queries"""
     answer: str
-    sources: List[str]
+    sources: List[dict]  # Each dict has {"text": str, "link": Optional[str]}
     session_id: str
 
 class CourseStats(BaseModel):
@@ -84,6 +84,12 @@ async def get_course_stats():
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.delete("/api/session/{session_id}")
+async def clear_session(session_id: str):
+    """Clear a session's conversation history"""
+    rag_system.session_manager.clear_session(session_id)
+    return {"status": "cleared", "session_id": session_id}
 
 @app.on_event("startup")
 async def startup_event():
