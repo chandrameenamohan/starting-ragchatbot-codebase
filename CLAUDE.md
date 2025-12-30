@@ -98,3 +98,24 @@ ANTHROPIC_API_KEY=your_key_here
 ## Development Guidelines
 
 - Always use `uv` to manage packages, do not use `pip` directly
+- Run `./dev.sh format` before committing to ensure consistent code style
+
+## Code Quality
+
+The project uses `black` for code formatting. Run quality checks with:
+
+```bash
+# Format all Python files
+./dev.sh format
+
+# Check formatting without changes
+./dev.sh check
+
+# Run tests
+./dev.sh test
+
+# Run all quality checks (format check + tests)
+./dev.sh all
+```
+
+Black configuration is in `pyproject.toml` with line-length of 88 characters.

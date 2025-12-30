@@ -1,4 +1,5 @@
 """Integration diagnostic tests to identify real failures"""
+
 import pytest
 import sys
 from pathlib import Path
@@ -17,9 +18,7 @@ class TestVectorStoreReal:
         from vector_store import VectorStore
 
         store = VectorStore(
-            config.CHROMA_PATH,
-            config.EMBEDDING_MODEL,
-            config.MAX_RESULTS
+            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
         )
 
         assert store is not None
@@ -32,9 +31,7 @@ class TestVectorStoreReal:
         from vector_store import VectorStore
 
         store = VectorStore(
-            config.CHROMA_PATH,
-            config.EMBEDDING_MODEL,
-            config.MAX_RESULTS
+            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
         )
 
         count = store.get_course_count()
@@ -51,9 +48,7 @@ class TestVectorStoreReal:
         from vector_store import VectorStore
 
         store = VectorStore(
-            config.CHROMA_PATH,
-            config.EMBEDDING_MODEL,
-            config.MAX_RESULTS
+            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
         )
 
         results = store.search("machine learning")
@@ -78,9 +73,7 @@ class TestCourseSearchToolReal:
         from search_tools import CourseSearchTool
 
         store = VectorStore(
-            config.CHROMA_PATH,
-            config.EMBEDDING_MODEL,
-            config.MAX_RESULTS
+            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
         )
 
         tool = CourseSearchTool(store)
@@ -102,7 +95,9 @@ class TestAnthropicAPIReal:
         from config import config
 
         print(f"API Key present: {bool(config.ANTHROPIC_API_KEY)}")
-        print(f"API Key length: {len(config.ANTHROPIC_API_KEY) if config.ANTHROPIC_API_KEY else 0}")
+        print(
+            f"API Key length: {len(config.ANTHROPIC_API_KEY) if config.ANTHROPIC_API_KEY else 0}"
+        )
         print(f"Model: {config.ANTHROPIC_MODEL}")
 
         assert config.ANTHROPIC_API_KEY, "ANTHROPIC_API_KEY is not set"
@@ -127,9 +122,7 @@ class TestAnthropicAPIReal:
 
         try:
             response = generator.generate_response(
-                query="Say 'Hello' and nothing else.",
-                tools=None,
-                tool_manager=None
+                query="Say 'Hello' and nothing else.", tools=None, tool_manager=None
             )
             print(f"Response: {response}")
             assert response is not None

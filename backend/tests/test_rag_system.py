@@ -1,4 +1,5 @@
 """Tests for RAG system query handling"""
+
 import pytest
 import sys
 from pathlib import Path
@@ -16,10 +17,12 @@ class TestRAGSystemQuery:
 
     def test_query_passes_tools_to_ai_generator(self, test_config):
         """Test that tool definitions are passed to AI generator"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response"
@@ -40,10 +43,12 @@ class TestRAGSystemQuery:
 
     def test_query_passes_tool_manager(self, test_config):
         """Test that tool_manager is passed to AI generator"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response"
@@ -63,10 +68,12 @@ class TestRAGSystemQuery:
 
     def test_query_returns_response_and_sources(self, test_config):
         """Test that query returns both response and sources"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response about ML"
@@ -78,9 +85,9 @@ class TestRAGSystemQuery:
             rag = RAGSystem(test_config)
 
             # Mock the tool manager's get_last_sources
-            rag.tool_manager.get_last_sources = Mock(return_value=[
-                {"text": "Course 1", "link": "http://example.com"}
-            ])
+            rag.tool_manager.get_last_sources = Mock(
+                return_value=[{"text": "Course 1", "link": "http://example.com"}]
+            )
 
             response, sources = rag.query("What is ML?")
 
@@ -89,10 +96,12 @@ class TestRAGSystemQuery:
 
     def test_query_resets_sources_after_retrieval(self, test_config):
         """Test that sources are reset after being retrieved"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response"
@@ -114,10 +123,12 @@ class TestRAGSystemQuery:
 
     def test_query_formats_prompt_correctly(self, test_config):
         """Test that the query is formatted into a prompt"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response"
@@ -140,10 +151,12 @@ class TestRAGSystemToolRegistration:
 
     def test_search_tool_is_registered(self, test_config):
         """Test that CourseSearchTool is registered"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator'), \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator"),
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_vector_store = Mock()
             MockVectorStore.return_value = mock_vector_store
@@ -155,10 +168,12 @@ class TestRAGSystemToolRegistration:
 
     def test_outline_tool_is_registered(self, test_config):
         """Test that CourseOutlineTool is registered"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator'), \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator"),
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_vector_store = Mock()
             MockVectorStore.return_value = mock_vector_store
@@ -170,10 +185,12 @@ class TestRAGSystemToolRegistration:
 
     def test_both_tools_have_definitions(self, test_config):
         """Test that both tools provide valid definitions"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator'), \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator"),
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_vector_store = Mock()
             MockVectorStore.return_value = mock_vector_store
@@ -194,10 +211,12 @@ class TestRAGSystemSessionHandling:
 
     def test_query_with_session_id_gets_history(self, test_config):
         """Test that conversation history is retrieved for sessions"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager') as MockSessionManager:
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager") as MockSessionManager,
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response"
@@ -223,10 +242,12 @@ class TestRAGSystemSessionHandling:
 
     def test_query_without_session_has_no_history(self, test_config):
         """Test that queries without session_id have no history"""
-        with patch('rag_system.VectorStore') as MockVectorStore, \
-             patch('rag_system.AIGenerator') as MockAIGenerator, \
-             patch('rag_system.DocumentProcessor'), \
-             patch('rag_system.SessionManager'):
+        with (
+            patch("rag_system.VectorStore") as MockVectorStore,
+            patch("rag_system.AIGenerator") as MockAIGenerator,
+            patch("rag_system.DocumentProcessor"),
+            patch("rag_system.SessionManager"),
+        ):
 
             mock_ai = Mock()
             mock_ai.generate_response.return_value = "Test response"

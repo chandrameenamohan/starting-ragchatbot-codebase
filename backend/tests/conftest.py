@@ -1,4 +1,5 @@
 """Shared pytest fixtures for RAG chatbot tests"""
+
 import pytest
 import sys
 from pathlib import Path
@@ -18,34 +19,27 @@ def mock_search_results_with_data():
     return SearchResults(
         documents=[
             "This is content about machine learning basics.",
-            "Here we discuss neural networks and deep learning."
+            "Here we discuss neural networks and deep learning.",
         ],
         metadata=[
             {"course_title": "AI Fundamentals", "lesson_number": 1, "chunk_index": 0},
-            {"course_title": "AI Fundamentals", "lesson_number": 2, "chunk_index": 0}
+            {"course_title": "AI Fundamentals", "lesson_number": 2, "chunk_index": 0},
         ],
-        distances=[0.1, 0.2]
+        distances=[0.1, 0.2],
     )
 
 
 @pytest.fixture
 def mock_search_results_empty():
     """Empty SearchResults"""
-    return SearchResults(
-        documents=[],
-        metadata=[],
-        distances=[]
-    )
+    return SearchResults(documents=[], metadata=[], distances=[])
 
 
 @pytest.fixture
 def mock_search_results_with_error():
     """SearchResults with error"""
     return SearchResults(
-        documents=[],
-        metadata=[],
-        distances=[],
-        error="Search error: connection failed"
+        documents=[], metadata=[], distances=[], error="Search error: connection failed"
     )
 
 
@@ -61,7 +55,7 @@ def mock_vector_store(mock_search_results_with_data):
         "lessons": [
             {"lesson_number": 0, "lesson_title": "Introduction"},
             {"lesson_number": 1, "lesson_title": "Machine Learning Basics"},
-        ]
+        ],
     }
     return store
 
@@ -119,7 +113,9 @@ def mock_final_response():
     """Mock final Anthropic response after tool execution"""
     text_block = Mock()
     text_block.type = "text"
-    text_block.text = "Based on the course materials, machine learning is a subset of AI."
+    text_block.text = (
+        "Based on the course materials, machine learning is a subset of AI."
+    )
 
     response = Mock()
     response.stop_reason = "end_turn"
@@ -157,21 +153,23 @@ def mock_anthropic_client(mock_tool_use_response, mock_final_response):
 def mock_tool_manager():
     """Mock ToolManager"""
     manager = Mock()
-    manager.execute_tool.return_value = "[AI Fundamentals - Lesson 1]\nThis is content about machine learning."
+    manager.execute_tool.return_value = (
+        "[AI Fundamentals - Lesson 1]\nThis is content about machine learning."
+    )
     manager.get_tool_definitions.return_value = [
         {
             "name": "search_course_content",
             "description": "Search course materials",
             "input_schema": {
                 "type": "object",
-                "properties": {
-                    "query": {"type": "string"}
-                },
-                "required": ["query"]
-            }
+                "properties": {"query": {"type": "string"}},
+                "required": ["query"],
+            },
         }
     ]
-    manager.get_last_sources.return_value = [{"text": "AI Fundamentals - Lesson 1", "link": "https://example.com"}]
+    manager.get_last_sources.return_value = [
+        {"text": "AI Fundamentals - Lesson 1", "link": "https://example.com"}
+    ]
     manager.reset_sources.return_value = None
     return manager
 
@@ -179,6 +177,7 @@ def mock_tool_manager():
 @dataclass
 class TestConfig:
     """Test configuration"""
+
     ANTHROPIC_API_KEY: str = "test-api-key"
     ANTHROPIC_MODEL: str = "claude-sonnet-4-20250514"
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
