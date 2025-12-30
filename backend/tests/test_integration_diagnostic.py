@@ -10,48 +10,36 @@ sys.path.insert(0, str(backend_path))
 
 
 class TestVectorStoreReal:
-    """Test VectorStore with real ChromaDB"""
+    """Test VectorStore with real ChromaDB and loaded test data"""
 
-    def test_vector_store_initializes(self):
+    def test_vector_store_initializes(self, integration_test_config):
         """Test that VectorStore can be initialized"""
-        from config import config
         from vector_store import VectorStore
 
         store = VectorStore(
-            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
+            integration_test_config.CHROMA_PATH,
+            integration_test_config.EMBEDDING_MODEL,
+            integration_test_config.MAX_RESULTS,
         )
 
         assert store is not None
         assert store.course_catalog is not None
         assert store.course_content is not None
 
-    def test_vector_store_has_courses(self):
+    def test_vector_store_has_courses(self, loaded_vector_store):
         """Test that VectorStore has courses loaded"""
-        from config import config
-        from vector_store import VectorStore
-
-        store = VectorStore(
-            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
-        )
-
-        count = store.get_course_count()
-        titles = store.get_existing_course_titles()
+        count = loaded_vector_store.get_course_count()
+        titles = loaded_vector_store.get_existing_course_titles()
 
         print(f"Course count: {count}")
         print(f"Course titles: {titles}")
 
         assert count > 0, "No courses found in vector store"
+        assert "Introduction to Machine Learning" in titles
 
-    def test_vector_store_search_works(self):
+    def test_vector_store_search_works(self, loaded_vector_store):
         """Test that search returns results"""
-        from config import config
-        from vector_store import VectorStore
-
-        store = VectorStore(
-            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
-        )
-
-        results = store.search("machine learning")
+        results = loaded_vector_store.search("machine learning")
 
         print(f"Search error: {results.error}")
         print(f"Documents found: {len(results.documents)}")
@@ -61,30 +49,25 @@ class TestVectorStoreReal:
             print(f"First doc preview: {results.documents[0][:100]}...")
 
         assert results.error is None, f"Search returned error: {results.error}"
+        assert len(results.documents) > 0, "Expected search results for 'machine learning'"
 
 
 class TestCourseSearchToolReal:
     """Test CourseSearchTool with real VectorStore"""
 
-    def test_execute_returns_content(self):
+    def test_execute_returns_content(self, loaded_vector_store):
         """Test that execute returns actual content"""
-        from config import config
-        from vector_store import VectorStore
         from search_tools import CourseSearchTool
 
-        store = VectorStore(
-            config.CHROMA_PATH, config.EMBEDDING_MODEL, config.MAX_RESULTS
-        )
-
-        tool = CourseSearchTool(store)
-        result = tool.execute(query="what is")
+        tool = CourseSearchTool(loaded_vector_store)
+        result = tool.execute(query="neural networks")
 
         print(f"Result length: {len(result)}")
         print(f"Result preview: {result[:200] if result else 'EMPTY'}...")
 
         assert result is not None
         assert len(result) > 0
-        assert "No relevant content" not in result or "error" not in result.lower()
+        assert "No relevant content" not in result
 
 
 class TestAnthropicAPIReal:
